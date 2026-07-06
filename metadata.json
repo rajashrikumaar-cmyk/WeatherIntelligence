@@ -1,0 +1,6 @@
+{
+  "name": "Weather Intelligence",
+  "description": "An advanced weather application with a sleek glassmorphism dark theme, 7-day forecast, and real-time intelligent planning recommendations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
