@@ -83,8 +83,10 @@ export default function CitySearch({ onSelectCity, isLoading }: CitySearchProps)
     });
   };
 
+  const isNoMatch = query.trim().length >= 2 && !isSearching && results.length === 0;
+
   return (
-    <div className="space-y-4 relative z-50">
+    <div className="space-y-4 relative z-[60]">
       {/* Search Bar Input Container */}
       <div ref={dropdownRef} className="relative w-full">
         <div className="relative">
@@ -113,21 +115,21 @@ export default function CitySearch({ onSelectCity, isLoading }: CitySearchProps)
           </div>
         </div>
 
-        {/* Floating Dropdown Autocomplete results */}
+        {/* Floating Dropdown Autocomplete results with White Background */}
         {showDropdown && (query.trim().length >= 2 || results.length > 0) && (
-          <div className="absolute top-full left-0 right-0 mt-2 glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10 z-50 animate-in fade-in slide-in-from-top-1 duration-200">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white text-zinc-900 rounded-2xl overflow-hidden shadow-2xl border border-zinc-200 z-[100] animate-in fade-in slide-in-from-top-1 duration-200">
             {results.length > 0 ? (
-              <div className="divide-y divide-white/5 max-h-72 overflow-y-auto">
+              <div className="divide-y divide-zinc-100 max-h-72 overflow-y-auto">
                 {results.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleSelect(item)}
-                    className="w-full text-left px-5 py-3.5 hover:bg-white/5 flex items-center justify-between transition-colors duration-150"
+                    className="w-full text-left px-5 py-3.5 hover:bg-zinc-100 flex items-center justify-between transition-colors duration-150"
                   >
                     <div className="flex items-center gap-3">
-                      <Icons.MapPin className="w-4 h-4 text-zinc-500 shrink-0" />
+                      <Icons.MapPin className="w-4 h-4 text-zinc-400 shrink-0" />
                       <div>
-                        <span className="text-sm font-medium text-white">{item.name}</span>
+                        <span className="text-sm font-medium text-zinc-900">{item.name}</span>
                         {item.admin1 && (
                           <span className="text-xs text-zinc-500 ml-1.5">
                             {item.admin1}
@@ -135,20 +137,20 @@ export default function CitySearch({ onSelectCity, isLoading }: CitySearchProps)
                         )}
                       </div>
                     </div>
-                    <span className="text-xs font-mono font-medium text-zinc-400 uppercase bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                    <span className="text-xs font-mono font-medium text-zinc-600 uppercase bg-zinc-100 border border-zinc-200 px-2 py-0.5 rounded">
                       {item.country_code || item.country}
                     </span>
                   </button>
                 ))}
               </div>
             ) : !isSearching ? (
-              <div className="px-5 py-4 text-sm text-zinc-500 flex items-center gap-2">
-                <Icons.Info className="w-4 h-4 text-zinc-600" />
-                No matching cities found. Try spelling code or exact name.
+              <div className="px-5 py-4 text-sm text-zinc-950 flex items-center gap-2">
+                <Icons.AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+                <span className="font-semibold text-rose-600">No Match Found</span>
               </div>
             ) : (
               <div className="px-5 py-4 text-sm text-zinc-500 flex items-center gap-2">
-                <Icons.Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
+                <Icons.Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
                 Locating geo-coordinates...
               </div>
             )}
@@ -156,20 +158,22 @@ export default function CitySearch({ onSelectCity, isLoading }: CitySearchProps)
         )}
       </div>
 
-      {/* Quick Cities Presets Grid */}
-      <div className="flex flex-wrap items-center gap-1.5 pt-1">
-        <span className="text-xs font-mono text-zinc-500 mr-2 uppercase tracking-wider">Metros:</span>
-        {QUICK_CITIES.map((city) => (
-          <button
-            key={city.name}
-            onClick={() => handleQuickCityClick(city)}
-            className="text-xs font-medium text-zinc-400 bg-white/[0.03] border border-white/[0.05] hover:border-white/20 hover:text-white px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all duration-200"
-          >
-            <Icons.MapPin className="w-3 h-3 opacity-60" />
-            {city.name}
-          </button>
-        ))}
-      </div>
+      {/* Quick Cities Presets Grid - Cleared when no match found */}
+      {!isNoMatch && (
+        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+          <span className="text-xs font-mono text-zinc-500 mr-2 uppercase tracking-wider">Metros:</span>
+          {QUICK_CITIES.map((city) => (
+            <button
+              key={city.name}
+              onClick={() => handleQuickCityClick(city)}
+              className="text-xs font-medium text-zinc-400 bg-white/[0.03] border border-white/[0.05] hover:border-white/20 hover:text-white px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all duration-200"
+            >
+              <Icons.MapPin className="w-3 h-3 opacity-60" />
+              {city.name}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
